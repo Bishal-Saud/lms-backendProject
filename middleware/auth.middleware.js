@@ -1,7 +1,7 @@
 import AppError from "../utils/error.util.js";
 import jwt from "jsonwebtoken";
 
-const isLoggedin = async (req, res, next) => {
+const isLoggedin = async (req, _res, next) => {
   // console.log(req.user);
   try {
     const { token } = req.cookies;
@@ -11,6 +11,10 @@ const isLoggedin = async (req, res, next) => {
     }
 
     const userDetails = await jwt.verify(token, process.env.JWT_SECRET);
+    if (!userDetails) {
+      return next(new AppError("Unauthorized, please login to continue", 401));
+    }
+
     req.user = userDetails;
     next();
   } catch (error) {
@@ -19,7 +23,7 @@ const isLoggedin = async (req, res, next) => {
 };
 const authorizedRoles =
   (...roles) =>
-  async (req, res, next) => {
+  async (req, _res, next) => {
     const currentUserRole = req.user.role;
     if (!roles.includes(currentUserRole)) {
       return next(
@@ -32,19 +36,12 @@ const authorizedRoles =
     next();
   };
 
-  const authorizedSubscriber = async(req,res,next) =>{
-    const subscription = req.user.subscription;
-    const currentUserRole = req.user.role;
-
-    if(currentUserRole !== 'ADMIN' && subscription.status !== 'active'){
-      return next(
-        new AppError(
-          "Please subscribe to access the route",
-          401
-        )
-      );
-    }
-next()
+const authorizedSubscriber = async (req, _res, next) => {
+  // If user is not admin or does not have an active subscription then error else pass
+  if (req.user.role !== "ADMIN" && req.user.subscription.status !== "active") {
+    return next(new AppError("Please subscribe to access this route.", 403));
   }
+  next();
+};
 
-export { isLoggedin, authorizedRoles,authorizedSubscriber };
+export { isLoggedin, authorizedRoles, authorizedSubscriber };

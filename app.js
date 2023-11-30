@@ -19,10 +19,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/admin", userRoutes);
-
 app.use("/api/v1/courses", courseRoutes);
-app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/payments", paymentRoutes);
 app.use(morgan("dev"));
 dbConnect();
 

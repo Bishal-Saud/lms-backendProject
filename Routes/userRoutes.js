@@ -16,7 +16,6 @@ import upload from "../middleware/multer.middleware.js";
 const router = Router();
 
 router.post("/register", upload.single("avatar"), register);
-// router.post("/registers", adminRegister);
 router.post("/login", login);
 router.get("/logout", isLoggedin, logout);
 router.get("/me", isLoggedin, getProfile);

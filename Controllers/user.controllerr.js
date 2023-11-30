@@ -244,53 +244,58 @@ const changePassword = async (req, res, next) => {
     message: "Password changed successfully!",
   });
 };
-
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   const { fullName } = req.body;
-  const { id } = req.user.id;
+  const { id } = req.user;
+  console.log("user id", id);
 
-  const user = await User.findById(id);
+  try {
+    const user = await User.findById(id);
 
-  if (!user) {
-    return next(new AppError("User does not exist", 400));
-  }
-
-  if (req.fullName) {
-    user.fullName = fullName;
-  }
-
-  if (req.file) {
-    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
-    try {
-      const result = await cloudinary.v2.uploader.upload(req.file.path, {
-        folder: "lms",
-        width: 250,
-        height: 250,
-        gravity: "faces",
-        crop: "fill",
-      });
-
-      if (result) {
-        user.avatar.public_id = result.public_id;
-        user.avatar.secure_url = result.secure_url;
-
-        // Remove file from server
-        fs.rm(`uploads/${req.file.filename}`);
-      }
-    } catch (e) {
-      return next(
-        new AppError(e || "File not uploaded, please try again", 500)
-      );
+    if (!user) {
+      return next(new AppError("User does not exist", 400));
     }
+
+    if (fullName) {
+      user.fullName = fullName;
+    }
+
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+        const result = await cloudinary.v2.uploader.upload(file.path, {
+          folder: "lms",
+          width: 250,
+          height: 250,
+          gravity: "faces",
+          crop: "fill",
+        });
+
+        if (result) {
+          user.avatar.public_id = result.public_id;
+          user.avatar.secure_url = result.secure_url;
+
+          // Remove file from server
+          await fs.rm(file.path);
+        }
+      }
+    }
+
+    await user.save();
+    // Fetch the updated user data
+    const updatedUser = await User.findById(id);
+
+    res.status(200).json({
+      success: true,
+      message: "User details updated successfully!",
+      user: updateUser,
+    });
+  } catch (error) {
+    return next(new AppError(error.message || "Error updating user", 500));
   }
-
-  await user.save();
-
-  res.status(200).json({
-    success: true,
-    message: "User details updated successfully!",
-  });
 };
+
 export {
   register,
   login,
