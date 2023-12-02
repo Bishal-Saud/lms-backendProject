@@ -264,7 +264,7 @@ const updateUser = async (req, res, next) => {
       for (const file of req.files) {
         await cloudinary.v2.uploader.destroy(user.avatar.public_id);
 
-        const result = await cloudinary.v2.uploader.upload(file.path, {
+        const result = await cloudinary.v2.uploader.upload(req.file.path, {
           folder: "lms",
           width: 250,
           height: 250,
@@ -277,14 +277,14 @@ const updateUser = async (req, res, next) => {
           user.avatar.secure_url = result.secure_url;
 
           // Remove file from server
-          await fs.rm(file.path);
+          // await fs.rm(file.path);
+          fs.rm(`uploads/${req.file.filename}`);
         }
       }
     }
 
     await user.save();
     // Fetch the updated user data
-    const updatedUser = await User.findById(id);
 
     res.status(200).json({
       success: true,
@@ -295,6 +295,60 @@ const updateUser = async (req, res, next) => {
     return next(new AppError(error.message || "Error updating user", 500));
   }
 };
+
+// const updateUser = async (req, res, next) => {
+//   // Destructuring the necessary data from the req object
+//   const { fullName } = req.body;
+//   const { id } = req.params;
+
+//   const user = await User.findById(id);
+
+//   if (!user) {
+//     return next(new AppError("Invalid user id or user does not exist"));
+//   }
+
+//   if (fullName) {
+//     user.fullName = fullName;
+//   }
+
+//   // Run only if user sends a file
+//   if (req.file) {
+//     // Deletes the old image uploaded by the user
+//     await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+//     try {
+//       const result = await cloudinary.v2.uploader.upload(req.file.path, {
+//         folder: "lms", // Save files in a folder named lms
+//         width: 250,
+//         height: 250,
+//         gravity: "faces", // This option tells cloudinary to center the image around detected faces (if any) after cropping or resizing the original image
+//         crop: "fill",
+//       });
+
+//       // If success
+//       if (result) {
+//         // Set the public_id and secure_url in DB
+//         user.avatar.public_id = result.public_id;
+//         user.avatar.secure_url = result.secure_url;
+
+//         // After successful upload remove the file from local storage
+//         fs.rm(`uploads/${req.file.filename}`);
+//       }
+//     } catch (error) {
+//       return next(
+//         new AppError(error || "File not uploaded, please try again", 400)
+//       );
+//     }
+//   }
+
+//   // Save the user object
+//   await user.save();
+
+//   res.status(200).json({
+//     success: true,
+//     message: "User details updated successfully",
+//   });
+// };
 
 export {
   register,
