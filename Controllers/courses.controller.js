@@ -20,6 +20,7 @@ const getAllLecturesByCourseId = async (req, res, next) => {
   try {
     const { id } = req.params;
     const courses = await coursemodel.findById(id);
+    console.log("courses", courses);
     if (!courses) {
       return next(new AppError("Invalid course id", 400));
     }

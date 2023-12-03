@@ -17,11 +17,12 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/courses", courseRoutes);
 app.use("/api/v1/payments", paymentRoutes);
-app.use(morgan("dev"));
+
 dbConnect();
 
 app.use("/ping", (req, res) => {

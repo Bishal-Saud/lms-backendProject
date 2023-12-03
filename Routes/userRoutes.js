@@ -8,7 +8,6 @@ import {
   resetPassword,
   changePassword,
   updateUser,
-  adminRegister,
 } from "../Controllers/user.controllerr.js";
 import { isLoggedin } from "../middleware/auth.middleware.js";
 import upload from "../middleware/multer.middleware.js";

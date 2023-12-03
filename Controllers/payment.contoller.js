@@ -5,7 +5,6 @@ import { razorpay } from "../server.js";
 import AppError from "../utils/error.util.js";
 import crypto from "crypto";
 import Payment from "../model/payment.Schema.js";
-import { log } from "console";
 
 const getrazorpayApiKey = async (req, res, next) => {
   try {
@@ -23,7 +22,6 @@ const buySubscription = async (req, res, next) => {
   try {
     const { id } = req.user;
     const user = await User.findById(id);
-    // console.log("user id is available", user);
 
     if (!user) {
       return next(new AppError("unauthorized, please login", 402));
@@ -41,7 +39,6 @@ const buySubscription = async (req, res, next) => {
 
     user.subscription.id = subscription.id;
     user.subscription.status = subscription.status;
-    console.log(subscription);
 
     await user.save();
 
@@ -51,7 +48,7 @@ const buySubscription = async (req, res, next) => {
       subscription_id: subscription.id,
     });
   } catch (error) {
-    console.log("Error in buySubscription", error);
+    // console.log("Error in buySubscription", error);
     return next(new AppError(error.message || "Try Again", 402));
   }
 };
@@ -66,13 +63,11 @@ const verifySubscription = async (req, res, next) => {
     } = req.body;
 
     const user = await User.findById(id);
-    // console.log(user);
 
     if (!user) {
       return next(new AppError("unauthorized, please login", 402));
     }
     const subscriptionId = user.subscription.id;
-    // console.log(subscriptionId);
 
     const generatedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_SECRET)
