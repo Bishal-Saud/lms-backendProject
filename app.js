@@ -7,6 +7,7 @@ import dbConnect from "./config/dbConnection.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 import courseRoutes from "./Routes/course.router.js";
 import paymentRoutes from "./Routes/payment.route.js";
+import contactRoutes from "./Routes/miscellaneous.router.js";
 
 const app = express();
 app.use(
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/courses", courseRoutes);
 app.use("/api/v1/payments", paymentRoutes);
+app.use("/api/v1/", contactRoutes);
 
 dbConnect();
 

@@ -3,7 +3,7 @@ import {
   contactUs,
   userStats,
 } from "../Controllers/miscellaneous.controller.js";
-import { authorizedRoles, isLoggedin } from "../middleware/auth.middleware";
+import { authorizedRoles, isLoggedin } from "../middleware/auth.middleware.js";
 
 const router = Router();
 

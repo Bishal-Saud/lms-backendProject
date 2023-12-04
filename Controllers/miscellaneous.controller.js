@@ -1,6 +1,6 @@
-import User from "../model/user.schema";
-import AppError from "../utils/error.util";
-import sendEmail from "../utils/node.mailer";
+import User from "../model/user.schema.js";
+import AppError from "../utils/error.util.js";
+import sendEmail from "../utils/node.mailer.js";
 
 /**
  * @CONTACT_US
