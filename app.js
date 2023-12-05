@@ -31,8 +31,13 @@ app.use("/ping", (req, res) => {
   res.send("PONG");
 });
 
-app.all("*", (req, res) => {
-  res.status(400).send("OOPS ! 404 Page not found !!");
+// Serve the React app for all routes
+const publicPath = path.join(__dirname, "..", "client", "lms-frontend");
+app.use(express.static(publicPath));
+
+// Catch-all route for React app
+app.get("*", (req, res) => {
+  res.sendFile(path.join(publicPath, "index.html"));
 });
 
 app.use(errorMiddleware);
