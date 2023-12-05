@@ -8,7 +8,7 @@ import errorMiddleware from "./middleware/error.middleware.js";
 import courseRoutes from "./Routes/course.router.js";
 import paymentRoutes from "./Routes/payment.route.js";
 import contactRoutes from "./Routes/miscellaneous.router.js";
-
+import path from "path";
 const app = express();
 app.use(
   cors({
@@ -32,7 +32,10 @@ app.use("/ping", (req, res) => {
 });
 
 // Serve the React app for all routes
-const publicPath = path.join(__dirname, "..", "client", "lms-frontend");
+const currentModuleUrl = new URL(import.meta.url);
+const currentModulePath = path.dirname(currentModuleUrl.pathname);
+const publicPath = path.join(currentModulePath, "..", "client", "lms-frontend");
+
 app.use(express.static(publicPath));
 
 // Catch-all route for React app
