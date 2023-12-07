@@ -70,7 +70,7 @@ const register = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "User register Successfully",
-      user: updateUser,
+      user: user,
     });
   } catch (error) {
     return new next(new AppError(`Something wrong ${error.message}`, 400));
