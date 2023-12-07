@@ -13,7 +13,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
-    credentials: false,
+    credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type,Authorization",
   })
@@ -32,9 +32,8 @@ dbConnect();
 app.use("/ping", (req, res) => {
   res.send("PONG");
 });
-app.use((req, res, next) => {
-  console.log("CORS middleware hit.");
-  console.log("Incoming request:", req.method, req.url);
+app.use("/api/v1/courses", (req, res, next) => {
+  console.log("CORS middleware hit for /api/v1/courses");
   console.log("Headers:", req.headers);
   res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
   res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
