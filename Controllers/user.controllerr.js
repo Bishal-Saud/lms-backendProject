@@ -6,8 +6,8 @@ import sendEmail from "../utils/node.mailer.js";
 import crypto from "crypto";
 
 const cookieOptions = {
-  // maxAge: 7 * 24 * 60 * 60 * 1000, //7days
-  maxAge: process.env.JWT_EXPIRY,
+  maxAge: 7 * 24 * 60 * 60 * 1000, //7days
+
   httpOnly: true,
   secure: process.env.NODE_ENV === "development",
 };
