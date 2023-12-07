@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 //   next();
 // });
 
-app.options("*", cors());
+// app.options("*", cors());
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/courses", courseRoutes);
