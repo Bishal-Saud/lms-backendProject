@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 const isLoggedin = async (req, _res, next) => {
   try {
-    const { token } = req.cookies.token;
+    const { token } = req.cookies;
     console.log("Token:", token);
     if (!token) {
       return next(new AppError("Unauthenticated, please login again", 401));
