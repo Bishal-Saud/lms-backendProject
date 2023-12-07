@@ -9,7 +9,7 @@ const cookieOptions = {
   maxAge: 7 * 24 * 60 * 60 * 1000, //7days
 
   httpOnly: true,
-  secure: process.env.NODE_ENV === "development",
+  secure: process.env.NODE_ENV === "development" ? true : false,
 };
 
 const register = async (req, res, next) => {
@@ -84,12 +84,21 @@ const login = async (req, res, next) => {
       return new next(new AppError("ALL field required", 400));
     }
     const user = await User.findOne({ email }).select("+password");
-    if (!user || !user.comparePassword(password)) {
-      return new next(new AppError("Email or Password doesn't match", 400));
+
+    if (!(user && (await user.comparePassword(password)))) {
+      return next(
+        new AppError(
+          "Email or Password do not match or user does not exist",
+          401
+        )
+      );
     }
     const token = await user.generateJWTtoken();
+
     user.password = undefined;
+
     res.cookie("token", token, cookieOptions);
+
     res.status(200).json({
       success: true,
       message: "User login Successfully",
@@ -102,9 +111,9 @@ const login = async (req, res, next) => {
 
 const logout = (req, res, next) => {
   res.cookie("token", null, {
-    secure: true,
-    httpOnly: true,
+    secure: process.env.NODE_ENV === "development" ? true : false,
     maxAge: 0,
+    httpOnly: true,
   });
 
   res.status(200).json({
@@ -115,8 +124,7 @@ const logout = (req, res, next) => {
 
 const getProfile = async (req, res, next) => {
   try {
-    const userID = req.user.id;
-    const user = await User.findById(userID);
+    const user = await User.findById(req.user.id);
 
     res.status(200).json({
       success: true,
@@ -163,6 +171,9 @@ const resetPassword = async (req, res, next) => {
   const { resetToken } = req.params;
   const { password } = req.body;
 
+  if (!password) {
+    return next(new AppError("Password is required", 400));
+  }
   const forgotPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
@@ -175,6 +186,7 @@ const resetPassword = async (req, res, next) => {
   if (!user) {
     return next(new AppError("Token is invalid or expired Try Again", 500));
   }
+
   user.password = undefined;
   user.forgotPasswordToken = undefined;
   user.forgotPasswordExpiry = undefined;
