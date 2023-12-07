@@ -8,11 +8,11 @@ import errorMiddleware from "./middleware/error.middleware.js";
 import courseRoutes from "./Routes/course.router.js";
 import paymentRoutes from "./Routes/payment.route.js";
 import contactRoutes from "./Routes/miscellaneous.router.js";
-import path from "path";
+// import path from "path";
 const app = express();
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL],
+    origin: process.env.FRONTEND_URL,
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type,Authorization",
@@ -40,16 +40,17 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
-// Serve the React app for all routes
-const currentModuleUrl = new URL(import.meta.url);
-const currentModulePath = path.dirname(currentModuleUrl.pathname);
-const publicPath = path.join(currentModulePath, "..", "client", "lms-frontend");
+// // Serve the React app for all routes
+// const currentModuleUrl = new URL(import.meta.url);
+// const currentModulePath = path.dirname(currentModuleUrl.pathname);
+// const publicPath = path.join(currentModulePath, "..", "client", "lms-frontend");
 
-app.use(express.static(publicPath));
+// app.use(express.static(publicPath));
 
 // Catch-all route for React app
 app.get("*", (req, res) => {
-  res.sendFile(path.join(publicPath, "index.html"));
+  // res.sendFile(path.join(publicPath, "index.html"));
+  res.send("OOPS ! Page Not Found");
 });
 
 app.use(errorMiddleware);
