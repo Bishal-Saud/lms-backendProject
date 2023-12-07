@@ -24,3 +24,4 @@ router.post("/change-password", isLoggedin, changePassword);
 router.put("/update/:id", isLoggedin, upload.single("avatar"), updateUser);
 
 export default router;
+
