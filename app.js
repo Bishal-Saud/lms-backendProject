@@ -22,6 +22,21 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  console.log("CORS middleware hit for /api/v1/courses");
+  console.log("Headers:", req.headers);
+
+  res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  next();
+});
+
+app.options("*", cors());
+
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/courses", courseRoutes);
 app.use("/api/v1/payments", paymentRoutes);
@@ -33,9 +48,7 @@ app.use("/ping", (req, res) => {
   res.send("PONG");
 });
 
-// Catch-all route for React app
 app.get("*", (req, res) => {
-  // res.sendFile(path.join(publicPath, "index.html"));
   res.send("OOPS ! Page Not Found");
 });
 
