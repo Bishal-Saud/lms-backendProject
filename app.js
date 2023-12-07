@@ -14,6 +14,7 @@ app.use(
   cors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
+    optionsSuccessStatus: 200,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type,Authorization",
   })
@@ -33,19 +34,6 @@ dbConnect();
 app.use("/ping", (req, res) => {
   res.send("PONG");
 });
-app.get((req, res, next) => {
-  if (req.headers.origin === process.env.FRONTEND_URL) {
-    res.setHeader("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET,HEAD,PUT,PATCH,POST,DELETE"
-    );
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-  }
-  next();
-});
-app.options("*", cors());
 
 app.get("*", (req, res) => {
   res.send("OOPS ! Page Not Found");
