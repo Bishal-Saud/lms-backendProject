@@ -13,7 +13,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
-    // credentials: true,
+    credentials: false,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type,Authorization",
   })
@@ -34,18 +34,16 @@ app.use("/ping", (req, res) => {
 });
 app.use((req, res, next) => {
   console.log("CORS middleware hit.");
+  console.log("Incoming request:", req.method, req.url);
+  console.log("Headers:", req.headers);
   res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
   res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
-// // Serve the React app for all routes
-// const currentModuleUrl = new URL(import.meta.url);
-// const currentModulePath = path.dirname(currentModuleUrl.pathname);
-// const publicPath = path.join(currentModulePath, "..", "client", "lms-frontend");
 
-// app.use(express.static(publicPath));
+app.options("*", cors());
 
 // Catch-all route for React app
 app.get("*", (req, res) => {
