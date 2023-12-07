@@ -23,20 +23,6 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1/courses", (req, res, next) => {
-  console.log("CORS middleware hit for /api/v1/courses");
-  console.log("Headers:", req.headers);
-
-  res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-
-  next();
-});
-
-app.options("*", cors());
-
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/courses", courseRoutes);
 app.use("/api/v1/payments", paymentRoutes);
@@ -47,6 +33,19 @@ dbConnect();
 app.use("/ping", (req, res) => {
   res.send("PONG");
 });
+app.get((req, res, next) => {
+  if (req.headers.origin === process.env.FRONTEND_URL) {
+    res.setHeader("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,HEAD,PUT,PATCH,POST,DELETE"
+    );
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+  }
+  next();
+});
+app.options("*", cors());
 
 app.get("*", (req, res) => {
   res.send("OOPS ! Page Not Found");
