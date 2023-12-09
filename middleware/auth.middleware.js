@@ -10,6 +10,7 @@ const isLoggedin = async (req, _res, next) => {
     }
 
     const userDetails = await jwt.verify(token, process.env.JWT_SECRET);
+    
     if (!userDetails) {
       return next(new AppError("Unauthorized, please login to continue", 401));
     }
