@@ -10,6 +10,8 @@ import paymentRoutes from "./Routes/payment.route.js";
 import contactRoutes from "./Routes/miscellaneous.router.js";
 
 const app = express();
+
+app.use(cors());
 // app.use(
 //   cors({
 //     origin: "*", // Allows all origins
@@ -22,7 +24,7 @@ const app = express();
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (origin === "https://learning-mangement.netlify.app" || !origin) {
+      if (origin === process.env.FRONTEND_URL || !origin) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
