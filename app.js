@@ -26,6 +26,22 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (origin === "https://learning-mangement.netlify.app" || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  })
+);
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(morgan("dev"));
