@@ -11,12 +11,19 @@ import contactRoutes from "./Routes/miscellaneous.router.js";
 // import path from "path";
 const app = express();
 app.use(
+  // cors({
+  //   origin: process.env.FRONTEND_URL,
+  //   credentials: true,
+  //   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  //   // allowedHeaders: "Content-Type,Authorization",
+  //   allowedHeaders: "*",
+  // })
+
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: "*", // Allows all origins
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    // allowedHeaders: "Content-Type,Authorization",
-    allowedHeaders: "*",
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 app.use(cookieParser());
