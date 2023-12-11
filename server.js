@@ -2,7 +2,8 @@ import { config } from "dotenv";
 config();
 import app from "./app.js";
 import { v2 } from "cloudinary";
-import Razorpay from "razorpay";
+import pkg from "razorpay";
+const Razorpay = pkg;
 //cloudinary configuration
 v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
