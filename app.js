@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import userRoutes from "./Routes/userRoutes.js";
@@ -10,13 +11,10 @@ import paymentRoutes from "./Routes/payment.route.js";
 import contactRoutes from "./Routes/miscellaneous.router.js";
 
 const app = express();
-
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 
