@@ -83,9 +83,7 @@ const createCourse = async (req, res, next) => {
       message: "Course Created Successfully ",
       course,
     });
-  } catch (error) {
-    return next(new AppError(error.message || "Not Created ! Try again", 500));
-  }
+  } catch (error) {}
 };
 const updateCourse = async (req, res, next) => {
   try {

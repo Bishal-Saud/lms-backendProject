@@ -11,6 +11,7 @@ const userSchema = new Schema(
       minLength: [5, "Name must be more than 5 char"],
       maxLength: [50, "Name must be less than 50 char"],
       trim: true,
+      
       lowercase: true,
     },
     email: {

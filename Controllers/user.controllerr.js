@@ -73,7 +73,7 @@ const register = async (req, res, next) => {
       user: user,
     });
   } catch (error) {
-    return new next(new AppError(`Something wrong ${error.message}`, 400));
+    return next(new AppError(`Something wrong ${error.message}`, 400));
   }
 };
 

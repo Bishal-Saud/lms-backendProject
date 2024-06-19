@@ -36,7 +36,6 @@ router
     isLoggedin,
     authorizedRoles("ADMIN"),
     upload.single("lecture"),
-
     addLectureToCourseById
   );
 

@@ -18,7 +18,6 @@ const courseSchema = new Schema({
   category: {
     type: String,
     required:[true,'category is required'],
-
   },
   thumbnail: {
     public_Id: {
